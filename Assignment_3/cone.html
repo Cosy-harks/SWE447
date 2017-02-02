@@ -4,8 +4,21 @@
         <script src="../Common/webgl-utils.js"></script>
         <script src="../Common/initShaders.js"></script>
         <script src="../Common/cone.js"></script>
-        <script src="Cone-fragment-shader.js"></script>
-        <script src="Cone-vertex-shader.js"></script>
+        <script id="Cone-fragment-shader">
+			void main()
+			{
+				gl_FragColor = vec4(140/256, 100/256, 40/256, 240/256);
+			}
+        </script>
+        <script id="Cone-vertex-shader">
+			attriute vec4 vPosition;
+
+			void main()
+			{
+				gl_PointSize = 5.0;
+				gl_Position = vPosition;
+			}
+		</script>
         <script src="cone.js"></script>
         
     </head>
