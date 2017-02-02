@@ -10,7 +10,7 @@ function init() {
         return;
     }
 
-    gl.clearColor( 26/256, 200/256, 1.0, 1.0 );
+    gl.clearColor( 206/256, 200/256, 0.0, 1.0 );
     cone = new cone( 10 );
     render();
 }
