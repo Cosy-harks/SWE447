@@ -1,6 +1,6 @@
 const DefaultNumSides = 8;
 
-function Cone( numSides, vertexShaderId, fragmentShaderId ) {
+function Cone( gl, numSides, vertexShaderId, fragmentShaderId ) {
 
     // Initialize the shader pipeline for this object using either shader ids
     //   declared in the application's HTML header, or use the default names.
