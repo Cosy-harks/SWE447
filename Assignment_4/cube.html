@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+
+		<script src="../Common/webgl-utils.js"></script>
+		<script src="../Common/initShaders.js"></script>
+		<script src="../Common/MV.js"></script>
+		<script src="../Common/Cube.js"></script>
+		<script src="cube.js"></script>
+
+		<script id="Cube-vertex-shader" type="x-shader/x-vertex">
+			attribute vec4 vPosition;
+
+			uniform mat4 MV;
+
+			void main()
+			{
+				gl_PointSize = 5.0;
+				gl_Position = MV * vPosition;
+			}
+		</script>
+
+		<script id="Cube-fragment-shader" type="x-shader/x-fragment">
+			void main()
+			{
+				gl_FragColor = vec4(1.0, 0.0, gl_FrontFacing ? 1.0 : 0.0, 1.0);
+			}
+		</script>
+	</head>
+
+	<body>
+		<canvas id="webgl-canvas" width="512" height="512" style="background-color: #0000FF"></canvas>
+	</body>
+</html>
