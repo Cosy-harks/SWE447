@@ -118,11 +118,15 @@ function render() {
   // used; it'll simplify the work you need to do.
 
   var name, planet, data;
-
+  
   name = "Sun";
   planet = Planets[name];
   data = SolarSystem[name];
   
+  placeObj(name, planet, data);
+  
+  // turning this into recursion
+  /*
   // Set PointMode to true to render all the vertices as points, as
   // compared to filled triangles.  This can be useful if you think
   // your planet might be inside another planet or the Sun.  Since the
@@ -334,7 +338,32 @@ function render() {
   planet.render();
   ms.pop();
   
+  */
+  
   window.requestAnimationFrame(render);
+}
+
+function placeObj(name, planet, data){
+    planet.PointMode = false;
+  
+	ms.push();
+	ms.rotate(time/data.year, rotAxis);
+	ms.translate(data.distance*10, 0, 0);
+	ms.scale(data.radius);
+	gl.useProgram(planet.program);
+	gl.uniformMatrix4fv(planet.uniforms.MV, false, flatten(ms.current()));
+	gl.uniformMatrix4fv(planet.uniforms.P, false, flatten(P));
+	gl.uniform4fv(planet.uniforms.color, flatten(data.color));
+	planet.render();
+	if(data.satellite){
+		for sat in data.satellite{
+			var n = sat.name;
+			var p = planets[n];
+			var d = sat;
+			placeObj(n, p, d);
+		}
+	}
+	ms.pop();
 }
 
 //---------------------------------------------------------------------------
