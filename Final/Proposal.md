@@ -1,4 +1,36 @@
 # H1 **Simple Modeling environment**
+I want to make a simple modeling environment for users to create complex 3D objects
+from inital 2D shapes, extrution, rotation, translating, scaleing, concatinating, and
+maybe as an ambitious goal subtracting the intersection of one object from another.
+
+# H3 interface
+1. Initial Layout
+
+	a. Three lines representing X, Y, Z axes inside canvas
+	
+		i. Should be really easy
+	
+	b. HTML buttons for changing the operation
+	
+		i. Also easy, but will likely change throughout development
+		
+2. Draw simple polygons, extrude, and translate
+
+	a. Two clicks for each of these
+
+3. Selecting, rotating, and scaling whole or part of objects
+
+	a. At least three clicks for latter two
+	
+	b. selecting
+	
+		i. single click for 1 surface/line/vertex
+		ii. double click for object
+		iii. drag - select all vertices inside resulting rect.
+		
+4. 
+
+5. subtracting intersecting surface
 
 # H3 Learn mouse events
 1. Dragging
