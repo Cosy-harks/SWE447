@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Interactive - Modeling - three.js canvas</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	</head>
+	
+	<body>
+		
+		<script src="../common/three.js"></script>
+		<script src="../common/Clock.js"></script>
+		<script src="js/mine/sphere.js"></script>
+		
+		<script type="text/javascript" src="js/controls/TrackballControls.js"></script>
+		
+		
+		<script>
+			
+			var scene, camera, renderer, parentTransform, controls;
+			var DirectedLight, tick, deltaTime = 0.05;
+			var spheres, zeros = 16;
+			var first = 0;
+			
+			init();
+			
+			function init()
+			{
+				//gl = WebGLUtils.setupWebGL( canvas );
+				//operations = ["line", "square"];
+				//OPC = 0;
+				var geometry = new THREE.SphereGeometry(200, 26, 26); //radius, width Segments, height segments
+				var material = new THREE.MeshBasicMaterial( { color: 0x0f0f0f } );
+				spheres = new sphere(geometry, material);
+				spheres.posGeo[0].position.copy(new THREE.Vector3( 260,  80,  80));
+				spheres.position[0].copy(new THREE.Vector3( 260,  80,  80));
+				spheres.velVec[0].copy(new THREE.Vector3(80, 0, 0));
+				//console.log(spheres.velVec[0]);
+				spheres.mass[0] = 8*Math.pow(10, zeros);
+				
+				spheres.posGeo[1].position.copy(new THREE.Vector3(-260, -80, -80));
+				spheres.position[1].copy(new THREE.Vector3(-260, -80, -80));
+				spheres.velVec[1].copy(new THREE.Vector3(-80, 0, 0));
+				spheres.mass[1] = 8*Math.pow(10, zeros);
+				
+				var s = new THREE.Object3D();
+				s.add( spheres.posGeo[0] );
+				s.add( spheres.posGeo[1] );
+				
+				for(var i = spheres.count; i < 10; i++)
+				{
+					//var radius = Math.random()*50+0.5;
+					//geometry = new THREE.SphereGeometry(400, 32, 32); //radius, width Segments, height segments
+					//material = new THREE.MeshBasicMaterial( { color: 0x0f0f0f } );
+					spheres.add();
+					s.add( spheres.posGeo[i] );
+					//console.log('pos dist', spheres.position[i]);
+					//console.log('m', spheres.mass[i]);
+					spheres.count = 0;
+				}
+				
+				scene = new THREE.Scene();
+				//tick = new THREE.Clock();
+				scene.add(s);
+				
+				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1.01, 5000 );
+				camera.position.set(250, 250, 850);
+				camera.lookAt(new THREE.Vector3(0, 0, 0));
+				
+				
+				//planes[0].rotation.x = -Math.PI/2;//new THREE.SphereGeometry(2, 0, 5);
+				
+				
+				parentTransform = new THREE.Object3D();
+				var axis;
+				
+				geometry = new THREE.Geometry();
+				geometry.vertices.push(new THREE.Vector3(-5000, 0, 0));
+				geometry.vertices.push(new THREE.Vector3( 5000, 0, 0));
+				material = new THREE.LineBasicMaterial( { color: 0xff0000 } );
+				axis = new THREE.Line( geometry, material );
+				parentTransform.add( axis );
+				
+				geometry = new THREE.Geometry();
+				geometry.vertices.push(new THREE.Vector3(0, 0, -5000));
+				geometry.vertices.push(new THREE.Vector3(0, 0,  5000));
+				material = new THREE.LineBasicMaterial( { color: 0x00ff00 } );
+				axis = new THREE.Line( geometry, material );
+				parentTransform.add( axis );
+				
+				geometry = new THREE.Geometry();
+				geometry.vertices.push(new THREE.Vector3(0, -5000, 0));
+				geometry.vertices.push(new THREE.Vector3(0,  5000, 0));
+				material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+				axis = new THREE.Line( geometry, material );
+				parentTransform.add( axis );
+				
+				scene.add( parentTransform );
+				
+				DirectedLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+				DirectedLight.position.copy(new THREE.Vector3(-100, 100, 222));
+				scene.add(DirectedLight);
+				
+				renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.setClearColor(0xfafafa);
+				document.body.appendChild( renderer.domElement );
+				
+				controls = new THREE.TrackballControls( camera, renderer.domElement );
+				//controls.minDistance = 1.00;
+				controls.rotateSpeed = 2.6;
+				controls.zoomSpeed = 0.051;
+				controls.dynamicDampingFactor = 0.08;
+				
+				window.addEventListener('resize', onWindowResize, false);
+			}
+			
+			function onWindowResize()
+			{
+				camera.aspect = window.innerWidth/window.innerHeight;
+				camera.updateProjectionMatrix ();
+				
+				renderer.setSize(window.innerWidth, window.innerHeight);
+			}
+			
+			function render() 
+			{
+				requestAnimationFrame( render );
+				controls.update();
+				camera.updateMatrixWorld();
+				
+				//deltaTime = tick.getDelta();
+				if(first < 6){console.log('vv', spheres.velVec[0]); first++;}
+				//console.log('vv', spheres.velVec[0]);
+				for(var i = 0; i < spheres.count-1; i++)
+				{
+					for(var j = i+1; j < spheres.count; j++)
+					{
+						spheres.ForceOfAcc(i, j);
+					}
+				}
+				
+				if(first < 6){console.log('vv', spheres.velVec[0]); first++;}
+				for(var i = 0; i < spheres.count-1; i++)
+				{
+					//console.log('vec add');
+					spheres.posGeo[i].translateOnAxis([spheres.velVec[i].x, spheres.velVec[i].y, spheres.velVec[i].z], spheres.velVecDistance(i)*deltaTime);
+					spheres.position[i].add(new THREE.Vector3(spheres.velVec[i]*deltaTime));
+					//console.log('pos dist', spheres.velVec[i]);
+					for(var j = i+1; j < spheres.count; j++)
+					{
+						
+						var d = spheres.position[i].distanceTo(spheres.position[j]);
+						//console.log('pos dist', spheres.position[i]);
+						if( d < spheres.size[i]/2 + spheres.size[j]/2)
+						{
+							console.log('vec change');
+							spheres.newVect(i, j, d);
+						}
+					}
+				}
+				renderer.render( scene, camera );
+				
+				//for(var i = 0; i < spheres.count; i++)
+				//{
+				//	spheres.posGeo[i].position.needsUpdate = true;
+				//}
+			}
+			//deltaTime = tick.getDelta();
+			render();
+		</script>
+	</body>
+	
+</html>
