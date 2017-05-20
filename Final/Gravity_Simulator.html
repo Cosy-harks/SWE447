@@ -32,15 +32,15 @@
 				var geometry = new THREE.SphereGeometry(200, 26, 26); //radius, width Segments, height segments
 				var material = new THREE.MeshBasicMaterial( { color: 0x0f0f0f } );
 				spheres = new sphere(geometry, material);
-				spheres.posGeo[0].position.copy(new THREE.Vector3( 260,  80,  80));
-				spheres.position[0].copy(new THREE.Vector3( 260,  80,  80));
-				spheres.velVec[0].copy(new THREE.Vector3(80, 0, 0));
-				//console.log(spheres.velVec[0]);
+				//spheres.posGeo[0].position.copy(new THREE.Vector3( 260,  80,  80));
+				//spheres.position[0].copy(new THREE.Vector3( 260,  80,  80));
+				//spheres.velVec[0].copy(new THREE.Vector3(80, 0, 0));
+				console.log(spheres.velVec[0]);
 				spheres.mass[0] = 8*Math.pow(10, zeros);
 				
-				spheres.posGeo[1].position.copy(new THREE.Vector3(-260, -80, -80));
-				spheres.position[1].copy(new THREE.Vector3(-260, -80, -80));
-				spheres.velVec[1].copy(new THREE.Vector3(-80, 0, 0));
+				//spheres.posGeo[1].position.copy(new THREE.Vector3(-260, -80, -80));
+				//spheres.position[1].copy(new THREE.Vector3(-260, -80, -80));
+				//spheres.velVec[1].copy(new THREE.Vector3(-80, 0, 0));
 				spheres.mass[1] = 8*Math.pow(10, zeros);
 				
 				var s = new THREE.Object3D();
@@ -56,9 +56,6 @@
 					s.add( spheres.posGeo[i] );
 					//console.log('pos dist', spheres.position[i]);
 					//console.log('m', spheres.mass[i]);
-//////////////////////////////////////// spheres.count is set to 0 because that shows the most objects when rendered.
-				//////// if commented only one shows up but the gravity starts to change values w/o moving the obj.
-					spheres.count = 0;
 				}
 				
 				scene = new THREE.Scene();
@@ -133,8 +130,9 @@
 				camera.updateMatrixWorld();
 				
 				//deltaTime = tick.getDelta();
-				if(first < 6){console.log('vv', spheres.velVec[0]); first++;}
-				//console.log('vv', spheres.velVec[0]);
+				
+				if( first < 6 ) { console.log ( 'vv', spheres.velVec[ 0 ] ); first++; }
+				
 				for(var i = 0; i < spheres.count-1; i++)
 				{
 					for(var j = i+1; j < spheres.count; j++)
@@ -143,31 +141,29 @@
 					}
 				}
 				
-				if(first < 6){console.log('vv', spheres.velVec[0]); first++;}
-				for(var i = 0; i < spheres.count-1; i++)
+				for(var i = 0; i < spheres.count; i++)
 				{
 					//console.log('vec add');
-					spheres.posGeo[i].translateOnAxis([spheres.velVec[i].x, spheres.velVec[i].y, spheres.velVec[i].z], spheres.velVecDistance(i)*deltaTime);
-					spheres.position[i].add(new THREE.Vector3(spheres.velVec[i]*deltaTime));
-					//console.log('pos dist', spheres.velVec[i]);
-					for(var j = i+1; j < spheres.count; j++)
+					
+					if( first < 6 ) { console.log ( 'pv', spheres.position[ 0 ] ); }
+					
+					spheres.positionUpdate( i, deltaTime );
+					
+					for( var j = i + 1; j < spheres.count; j++ )
 					{
 						
-						var d = spheres.position[i].distanceTo(spheres.position[j]);
-						//console.log('pos dist', spheres.position[i]);
-						if( d < spheres.size[i]/2 + spheres.size[j]/2)
+						var d = spheres.position[ i ].distanceTo( spheres.position[ j ] );
+						
+						if( d < spheres.size[ i ]/2 + spheres.size[ j ]/2 )
 						{
-							console.log('vec change');
-							spheres.newVect(i, j, d);
+							
+							console.log( 'vec change' );
+							spheres.newVect( i, j, d );
+							
 						}
 					}
 				}
 				renderer.render( scene, camera );
-				
-				//for(var i = 0; i < spheres.count; i++)
-				//{
-				//	spheres.posGeo[i].position.needsUpdate = true;
-				//}
 			}
 			//deltaTime = tick.getDelta();
 			render();

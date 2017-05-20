@@ -13,19 +13,22 @@ function sphere(geo, matter)
 	
 	var dense = Math.random()*50+0.5;
 	this.size = [400];
-	this.velVec = [ new THREE.Vector3() ];
+	this.velVec = [ new THREE.Vector3(0, -65, 0) ];
 	this.posGeo = [ new THREE.Mesh( geo, matter ) ];
-	this.position = [ new THREE.Vector3() ];
+	this.position = [ new THREE.Vector3(300, -120, -80) ];
+	
+	this.posGeo[0].position.copy(this.position[0]);
 	this.mass = [];//[ 4/3*Math.PI*Math.pow( this.size[0]/2, 3 ) *dense ];
 	
 	this.size[1] = 400;
-	this.velVec[1] = new THREE.Vector3();
+	this.velVec[1] = new THREE.Vector3(0, 65, 0);
 	this.posGeo[1] = new THREE.Mesh( geo, matter );
-	this.position[1] = new THREE.Vector3();
+	this.position[1] = new THREE.Vector3(-300, 120, 80);
+	this.posGeo[1].position.copy(this.position[1]);
 	//this.mass[1] = 4/3*Math.PI*Math.pow( this.size[1]/2, 3 )*dense;
 	this.bounce = 0.5;
 	this.count = 2; // I found that if count ends at 0 some objs get drawn
-	
+	console.log('vv' + this.velVec[0]);
 }
 
 sphere.prototype.add = function()
@@ -34,7 +37,7 @@ sphere.prototype.add = function()
 	this.size.push(Math.round(Math.random()*50+5));
 	this.mass.push((4/3)*Math.PI*Math.pow(this.size[this.count]/2, 3)*dense);
 	
-	var geo = new THREE.SphereGeometry(this.size[this.count], 23, 23);
+	var geo = new THREE.SphereGeometry(this.size[this.count], 18, 18);
 	var green = (this.mass[this.count]/Math.pow(this.size[this.count]/2, 3));
 	
 	if(green > 256){green = 256;}
@@ -45,7 +48,7 @@ sphere.prototype.add = function()
 	this.velVec[this.count] = new THREE.Vector3();
 	this.posGeo.push( new THREE.Mesh ( geo, matter ));
 	
-	var x = (Math.random()-0.5)*1800, y = (Math.random()-0.5)*1800, z = (Math.random()-0.5)*1800;
+	var x = (Math.random()-0.5)*800, y = (Math.random()-0.5)*800, z = (Math.random()-0.5)*800;
 	this.posGeo[this.count].position.copy(new THREE.Vector3(x, y, z));
 	this.position.push(new THREE.Vector3(x, y, z));
 	this.count+=1;
@@ -67,10 +70,10 @@ sphere.prototype.ForceOfAcc = function(indexA, indexB)
 	//if(first < 4){console.log('m ', this.mass[indexA]);}
 	if(first < 4){console.log('f ', f);}
 	var accvec = new THREE.Vector3(deltaDist.x*f*deltaTime, deltaDist.y*f*deltaTime, deltaDist.z*f*deltaTime);
-	var dmb = ( d*this.mass[indexB]);
-	var dma = (-d*this.mass[indexA]);
-	this.velVec[indexA].add(new THREE.Vector3(accvec.x/dmb, accvec.y/dmb, accvec.z/dmb));
-	this.velVec[indexB].add(new THREE.Vector3(accvec.x/dma, accvec.y/dma, accvec.z/dma));
+	var  distmassB = (  d*this.mass[ indexB ] );
+	var ndistmassA = ( -d*this.mass[ indexA ] );
+	this.velVec[indexA].add(new THREE.Vector3(accvec.x/ndistmassA, accvec.y/ndistmassA, accvec.z/ndistmassA));
+	this.velVec[indexB].add(new THREE.Vector3(accvec.x/ distmassB, accvec.y/ distmassB, accvec.z/ distmassB));
 	if(first < 4){console.log('av', accvec);}
 	if(first < 4){console.log('dt', deltaTime);}
 	if(first < 4){console.log('dd', deltaDist);}
@@ -117,17 +120,28 @@ sphere.prototype.newVect = function(elem1, elem2, d){
     //println(b2.vertical + ", " + ratio + ", " + impulse[0]);
     //println(ratio);
     var vari = Math.max(depth-slop, 0.0)/inv_mass_sum/prcent;
-	var correct = new THREE.Vector3(unitNorm.multiplyScalar(vari));
+	var correct = new THREE.Vector3(unitNorm.x*vari, unitNorm.y*vari, unitNorm.z*vari);
 	
 //    println(b2.xPos + " " + b2.yPos);
-	this.posGeo[elem1].position.add(new THREE.Vector3(correct.x/-this.mass[elem1], correct.y/-this.mass[elem1], correct.z/-this.mass[elem1]));
+	this.position[elem1].x += correct.x/-this.mass[elem1];
+	this.position[elem1].y += correct.y/-this.mass[elem1];
+	this.position[elem1].z += correct.z/-this.mass[elem1];
     
-	this.posGeo[elem2].position.add(new THREE.Vector3(correct.x/ this.mass[elem2], correct.y/ this.mass[elem2], correct.z/ this.mass[elem2]));
+	this.position[elem2].x += correct.x/ this.mass[elem2];
+	this.position[elem2].y += correct.y/ this.mass[elem2];
+	this.position[elem2].z += correct.z/ this.mass[elem2];
 };
 
 sphere.prototype.velVecDistance = function(i)
 {
 	return Math.sqrt(Math.pow(this.velVec[i].x, 2) + Math.pow(this.velVec[i].y, 2) + Math.pow(this.velVec[i].z, 2));
+}
+
+sphere.prototype.positionUpdate = function(i, deltaTime){
+	this.position[i].x += this.velVec[i].x*deltaTime;
+	this.position[i].y += this.velVec[i].y*deltaTime;
+	this.position[i].z += this.velVec[i].z*deltaTime;
+	this.posGeo[i].position.copy(this.position[i]);
 }
 
 
