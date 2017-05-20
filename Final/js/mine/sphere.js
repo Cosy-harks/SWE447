@@ -70,10 +70,10 @@ sphere.prototype.ForceOfAcc = function(indexA, indexB)
 	//if(first < 4){console.log('m ', this.mass[indexA]);}
 	if(first < 4){console.log('f ', f);}
 	var accvec = new THREE.Vector3(deltaDist.x*f*deltaTime, deltaDist.y*f*deltaTime, deltaDist.z*f*deltaTime);
-	var dmb = ( -d*this.mass[indexA] );
-	var dma = (  d*this.mass[indexB] );
-	this.velVec[indexA].add(new THREE.Vector3(accvec.x/dmb, accvec.y/dmb, accvec.z/dmb));
-	this.velVec[indexB].add(new THREE.Vector3(accvec.x/dma, accvec.y/dma, accvec.z/dma));
+	var  distmassB = (  d*this.mass[ indexB ] );
+	var ndistmassA = ( -d*this.mass[ indexA ] );
+	this.velVec[indexA].add(new THREE.Vector3(accvec.x/ndistmassA, accvec.y/ndistmassA, accvec.z/ndistmassA));
+	this.velVec[indexB].add(new THREE.Vector3(accvec.x/ distmassB, accvec.y/ distmassB, accvec.z/ distmassB));
 	if(first < 4){console.log('av', accvec);}
 	if(first < 4){console.log('dt', deltaTime);}
 	if(first < 4){console.log('dd', deltaDist);}
