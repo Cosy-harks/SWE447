@@ -12,12 +12,12 @@
 			}
         </script>
         <script id="Cone-vertex-shader">
-			attribute vec4 vPosition;
+			attribute vec4 aPosition;
 			uniform mat4 MV; // added
 			void main()
 			{
 				gl_PointSize = 5.0;
-				gl_Position = MV * vPosition; // added MV * 
+				gl_Position = MV * aPosition; // added MV * 
 			}
 		</script>
         <script src="cone.js"></script>
