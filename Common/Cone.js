@@ -72,7 +72,7 @@ function Cone( gl, numSides, vertexShaderId, fragmentShaderId ) {
     gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.indices.buffer );
     gl.bufferData( gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW );
 
-    this.positions.attributeLoc = gl.getAttribLocation( this.program, "vPosition" );
+    this.positions.attributeLoc = gl.getAttribLocation( this.program, "aPosition" );
     gl.enableVertexAttribArray( this.positions.attributeLoc );
     
     MVLoc = gl.getUniformLocation( this.program, "MV" );
