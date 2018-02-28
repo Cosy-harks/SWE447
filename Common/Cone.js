@@ -87,7 +87,9 @@ function Cone( gl, numSides, vertexShaderId, fragmentShaderId ) {
             gl.FLOAT, gl.FALSE, 0, 0 );
  
         gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.indices.buffer );
-
+		/**/
+		gl.uniformMatrix4fv( MVLoc, gl.FALSE, flatten(this.MV) );
+		/**/
         // Draw the cone's base
         //
         gl.drawElements( gl.POINTS, this.indices.count, gl.UNSIGNED_SHORT, 0 );
