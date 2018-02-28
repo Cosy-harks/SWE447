@@ -1,5 +1,6 @@
 var gl = null;
-var cone = null
+var cone = null;
+var rs = 0;
 function init() {
     var canvas = document.getElementById( "webgl-canvas" );
 
@@ -17,7 +18,8 @@ function init() {
 
 function render() {
     gl.clear( gl.COLOR_BUFFER_BIT );
-    cone.MV = rotate(0.5, [0, 1, 0]); //added
+    rs += 0.5
+    cone.MV = rotate(rs, [0, 1, 0]); //added
     cone.render();
 }
 
