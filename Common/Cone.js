@@ -74,6 +74,10 @@ function Cone( gl, numSides, vertexShaderId, fragmentShaderId ) {
 
     this.positions.attributeLoc = gl.getAttribLocation( this.program, "vPosition" );
     gl.enableVertexAttribArray( this.positions.attributeLoc );
+    
+    MVLoc = gl.getUniformLocation( this.program, "MV" );
+
+    this.MV = undefined;
 
     this.render = function () {
         gl.useProgram( this.program );
