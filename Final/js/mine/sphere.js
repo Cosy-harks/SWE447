@@ -69,12 +69,12 @@ sphere.prototype.ForceOfAcc = function(indexA, indexB)
 	var f = this.gravForce(this.mass[indexA], this.mass[indexB], d);
 	//if(first < 4){console.log('m ', this.mass[indexA]);}
 	if(first < 4){console.log('f ', f);}
-	var accvec = new THREE.Vector3(deltaDist.x*f*deltaTime, deltaDist.y*f*deltaTime, deltaDist.z*f*deltaTime);
+	var Nmm_s = new THREE.Vector3(deltaDist.x*f*deltaTime, deltaDist.y*f*deltaTime, deltaDist.z*f*deltaTime);
 	var  distmassB = (  d*this.mass[ indexB ] );
 	var ndistmassA = ( -d*this.mass[ indexA ] );
-	this.velVec[indexA].add(new THREE.Vector3(accvec.x/ndistmassA, accvec.y/ndistmassA, accvec.z/ndistmassA));
-	this.velVec[indexB].add(new THREE.Vector3(accvec.x/ distmassB, accvec.y/ distmassB, accvec.z/ distmassB));
-	if(first < 4){console.log('av', accvec);}
+	this.velVec[indexA].add(new THREE.Vector3(Nmm_s.x/ndistmassA, Nmm_s.y/ndistmassA, Nmm_s.z/ndistmassA));
+	this.velVec[indexB].add(new THREE.Vector3(Nmm_s.x/ distmassB, Nmm_s.y/ distmassB, Nmm_s.z/ distmassB));
+	if(first < 4){console.log('Newton meters^2 per sec', Nmm_s);}
 	if(first < 4){console.log('dt', deltaTime);}
 	if(first < 4){console.log('dd', deltaDist);}
 }
