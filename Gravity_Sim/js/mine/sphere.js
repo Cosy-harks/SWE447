@@ -97,7 +97,7 @@ sphere.prototype.ForceOfAcc = function(indexA, indexB)
 }
 
 sphere.prototype.newVect = function(elem1, elem2, d){
-    var prcent = 0.89;
+    var prcent = 0.99;
     var slop = 0.1;
     var inv_mass_sum = 1/this.mass[elem1] + 1/this.mass[elem2];
     // normal components at impact
