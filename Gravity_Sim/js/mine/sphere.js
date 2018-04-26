@@ -98,7 +98,7 @@ sphere.prototype.ForceOfAcc = function(indexA, indexB)
 
 sphere.prototype.newVect = function(elem1, elem2, d){
     var prcent = 0.89;
-    var slop = 0.5;
+    var slop = 0.1;
     var inv_mass_sum = 1/this.mass[elem1] + 1/this.mass[elem2];
     // normal components at impact
     var norm = new THREE.Vector3(this.position[elem2].x - this.position[elem1].x, this.position[elem2].y - this.position[elem1].y, this.position[elem2].z - this.position[elem1].z);
@@ -118,9 +118,12 @@ sphere.prototype.newVect = function(elem1, elem2, d){
     var VelOnNorm = relativel.dot(unitNorm);
     
     //println(VelOnNorm);
-    if(VelOnNorm > 0){return;}// if going in the same direction
+    if(VelOnNorm > 0){return;}// if going in the same direction	
+	// e = squishyness of objects. range I think is [0, 1]
     var e = this.bounce;
-    var j = -(e)*VelOnNorm; // positive, big e big j
+	// positive, big e big j
+	// j = imulse magnetude
+    var j = -(e)*VelOnNorm; 
     
     var impulse = new THREE.Vector3(unitNorm.x*j, unitNorm.y*j, unitNorm.z*j);// each part less than j
     
